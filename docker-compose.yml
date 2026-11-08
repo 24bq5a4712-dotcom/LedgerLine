@@ -1,0 +1,24 @@
+services:
+  backend:
+    build: ./backend
+    environment:
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY:-ledgerline-local-development-secret-change-me}
+      FRONTEND_ORIGINS: http://localhost:8080
+      LEDGERLINE_DB: /data/ledgerline.db
+    volumes:
+      - ledgerline-data:/data
+    ports:
+      - "5000:5000"
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        VITE_API_URL: http://localhost:5000/api
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+
+volumes:
+  ledgerline-data:
